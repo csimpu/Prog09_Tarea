@@ -7,6 +7,7 @@ package com.damel.banco;
 import com.damel.objetos.CuentaBancaria;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.io.*; // Para reducir la cantidad de importaciones, importo todo
 
 /**
  * Clase Banco<br>
@@ -23,16 +24,18 @@ public class Banco {
 
     // Defino el arraylist
     private ArrayList<CuentaBancaria> cuentas;
-    private int contador;
+    // Defino el nombre del archivo donde se guardarán los datos.
+    private static final String NOMBRE_ARCHIVO = "datoscuentasbancarias.dat";
 
     /**
      * Constructor de la clase.<br>
      *
-     * Inicializa el array y el contador.
+     * Inicializa el arrayList e intenta cargar las cuentas
      */
     public Banco() {
         cuentas = new ArrayList<>(); // Inicializo el ArrayList
-        contador = 0;
+        cargarCuentas();
+        
     }
 
     /**
@@ -53,7 +56,7 @@ public class Banco {
      * @return devuelve la lista con el formato especificado
      */
     public String[] listadoCuentas() {
-        String[] listado = new String[contador];
+        String[] listado = new String[cuentas.size()];
         for (int i = 0; i < cuentas.size(); i++) { // Utilizo size() para saber el tamaño del ArrayList
             listado[i] = cuentas.get(i).getIban() // Utilizo get() para obtener la posicion en el ArrayList
                     + "\n" + cuentas.get(i).getTitular().getNombre() + " " + cuentas.get(i).getTitular().getApellidos()
@@ -160,5 +163,44 @@ public class Banco {
             }
         }
         return -1;
+    }
+    /**
+     * Guarda los datos de las cuentas en un fichero binario
+     */
+    public void guardarCuentas(){
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(NOMBRE_ARCHIVO))){
+            oos.writeObject(cuentas);
+            System.out.println("Los datos de las cuentas se han guardado correctamente.");
+        } catch (IOException eIOE){
+            System.err.println("Error al guardar los datos: " +eIOE.getMessage());
+        }
+    }
+    
+    /**
+     * Carga los datos de las cuentas desde un fichero binario
+     */
+    @SuppressWarnings("unchecked") // Para evitar las advertencias de que el cast de después puede no ser seguro
+    private void cargarCuentas(){
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(NOMBRE_ARCHIVO))){
+            Object objeto = ois.readObject();
+            if (objeto instanceof ArrayList) {
+                cuentas = (ArrayList<CuentaBancaria>) objeto;
+                System.out.println("Datos cargados correctamente");
+            }
+        } catch (FileNotFoundException eFNFE){
+            System.err.println("Error: Archivo no encontrado. Se iniciara con una lista vacia.");
+        } catch (IOException eIOE){
+            System.err.println("Error al cargar los datos: " +eIOE.getMessage());
+        } catch (ClassNotFoundException eCNFE){
+            System.err.println("Error al cargar los datos: Clase no encontrada.");
+        }
+    }
+    
+    /**
+     * Obtiene el listado de cuentas para generar el informe
+     * @return 
+     */
+    public ArrayList<CuentaBancaria> getCuentas(){
+        return cuentas;
     }
 }
