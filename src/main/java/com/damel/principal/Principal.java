@@ -7,6 +7,8 @@ import com.damel.objetos.*;
 import com.damel.banco.*;
 import com.damel.utilidades.*;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.io.*;
 
 /**
  * La clase que gestiona el menú principal del programa<br><br>
@@ -19,6 +21,8 @@ public class Principal {
 
     private static Banco banco = new Banco();
     private static Scanner entrada = new Scanner(System.in);
+    // Añado el nombre del archivo que se generará
+    private static final String NOMBRE_ARCHIVO_CLIENTES = "ListadoClientesIBAN.txt";
 
     /**
      * Metodo main de la clase.<br>
@@ -52,7 +56,11 @@ public class Principal {
                     case 7 ->
                         borrarCuenta();
                     case 8 ->
+                        listadoClientes();
+                    case 9 -> {
+                        banco.guardarCuentas();
                         System.out.println("Gracias por usar el servicio. Cerrando...");
+                    }
                     case 0 ->
                         mostrarAyuda();
                     default ->
@@ -62,7 +70,7 @@ public class Principal {
                 System.err.println("Error: Debes introducir un numero valido.");
                 opcion = 0;
             }
-        } while (opcion != 8);
+        } while (opcion != 9);
 
         entrada.close();
     }
@@ -80,7 +88,9 @@ public class Principal {
         System.out.println("[4] - Realizar un ingreso");
         System.out.println("[5] - Realizar una retirada");
         System.out.println("[6] - Consultar el saldo");
-        System.out.println("[7] - Salir               [0] - Ayuda");
+        System.out.println("[7] - Eliminar una cuenta");
+        System.out.println("[8] - Listado de clientes");
+        System.out.println("[9] - Salir               [0] - Ayuda");
         System.out.println("*************************************");
         System.out.print("Introduce una opcion: ");
     }
@@ -440,6 +450,33 @@ public class Principal {
     }
 
     /**
+     * Genera un fichero de texto con el listado de los clientes y los IBAN de 
+     * sus cuentas. Indica también el total de cuentas que hay
+     */
+    private static void listadoClientes() {
+        System.out.println("*************************************");
+        System.out.println("*        Listado de clientes        *");
+        System.out.println("*************************************");
+
+        // Obtengo la lista de las cuentas
+        ArrayList<CuentaBancaria> cuentas = banco.getCuentas();
+
+        try (PrintWriter escritor = new PrintWriter(new FileWriter(NOMBRE_ARCHIVO_CLIENTES))) {
+            for (CuentaBancaria cuenta : cuentas) {
+                escritor.println("Propietario: " + cuenta.getTitular().getNombre() 
+                        + " " + cuenta.getTitular().getApellidos() + cuenta.getIban());
+            }
+            escritor.println("Numero total de cuentas: " + cuentas.size());
+            System.out.println("Fichero '" + NOMBRE_ARCHIVO_CLIENTES + "' generado correctamente.");
+        } catch (IOException eIOE) {
+            System.err.println("Error al generar el fichero: " + eIOE.getMessage());
+        }
+        System.out.println("*************************************");
+
+        Utilidades.enterParaSalir();
+    }
+
+    /**
      * Muestra el menú de ayuda.
      */
     private static void mostrarAyuda() {
@@ -456,6 +493,10 @@ public class Principal {
         System.out.println("      de saldo en la cuenta elegida");
         System.out.println("[6] - Permite consultar el saldo de ");
         System.out.println("      la cuenta seleccionada");
+        System.out.println("[7] - Permite eliminar una cuenta ");
+        System.out.println("      del banco");
+        System.out.println("[8] - Genera un informe con los");
+        System.out.println("      clientes del banco");
         System.out.println("*************************************");
         Utilidades.enterParaSalir();
     }
