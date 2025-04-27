@@ -4,6 +4,8 @@
  */
 package com.damel.objetos;
 
+import java.io.Serializable;
+
 /**
  * La clase que gestiona las Cuentas Corrientes Personales.<br>
  *
@@ -14,8 +16,9 @@ package com.damel.objetos;
  *
  * @author Borja Piñero
  */
-public class CuentaCorrientePersonal extends CuentaCorriente {
+public class CuentaCorrientePersonal extends CuentaCorriente implements Serializable{
 
+    private static final long SerialVersionUID = 1L; // identificador para la serialización
     private double comisionMantenimiento;
 
     /**

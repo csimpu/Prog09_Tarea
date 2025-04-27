@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package com.damel.objetos;
+import java.io.Serializable;
 
 /**
  * Clase que gestiona los titulares de las cuentas<br><br>
@@ -11,8 +12,9 @@ package com.damel.objetos;
  *
  * @author Borja Piñero
  */
-public class Persona {
+public class Persona implements Serializable {
 
+    private static final long SerialVersionUID = 1L; // identificador para la serialización
     private String nombre,
             apellidos,
             dni;

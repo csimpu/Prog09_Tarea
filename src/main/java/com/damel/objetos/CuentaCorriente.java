@@ -4,6 +4,8 @@
  */
 package com.damel.objetos;
 
+import java.io.Serializable;
+
 /**
  * Clase abstracta que sirve de plantilla de los dos tipos de Cuentas 
  * Corrientes.<br>
@@ -16,8 +18,9 @@ package com.damel.objetos;
  *
  * @author Borja Piñero
  */
-public abstract class CuentaCorriente extends CuentaBancaria {
+public abstract class CuentaCorriente extends CuentaBancaria implements Serializable {
 
+    private static final long SerialVersionUID = 1L; // identificador para la serialización
     protected String entidadesAutorizadas;
 
     /**

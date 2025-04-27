@@ -5,6 +5,7 @@
 package com.damel.objetos;
 
 import com.damel.interfaces.Imprimible;
+import java.io.Serializable;
 
 /**
  * Clase abstracta que sirve como plantilla para las demás cuentas bancarias.
@@ -14,8 +15,9 @@ import com.damel.interfaces.Imprimible;
  *
  * @author Borja Piñero
  */
-public abstract class CuentaBancaria implements Imprimible {
-
+public abstract class CuentaBancaria implements Imprimible, Serializable {
+    
+    private static final long SerialVersionUID = 1L; // identificador para la serialización
     protected String iban;
     protected double saldo;
     protected Persona titular;

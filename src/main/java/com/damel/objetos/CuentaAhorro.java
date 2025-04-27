@@ -4,6 +4,8 @@
  */
 package com.damel.objetos;
 
+import java.io.Serializable;
+
 /**
  * La clase que gestiona las Cuentas de Ahorro.<br>
  *
@@ -14,8 +16,9 @@ package com.damel.objetos;
  *
  * @author Borja Piñero
  */
-public class CuentaAhorro extends CuentaBancaria {
-
+public class CuentaAhorro extends CuentaBancaria implements Serializable{
+    
+    private static final long SerialVersionUID = 1L; // identificador para la serialización
     // Atributos de CuentaAhorro
     private double interesAnual; //El interés que genera la cuenta de ahorro
 
